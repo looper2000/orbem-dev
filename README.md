@@ -1,3 +1,3 @@
-## Orbemai
+## Orbem-ai
 
-This is testing file for the orbme hero animation.
+This is testing file for the orbem hero animation.
