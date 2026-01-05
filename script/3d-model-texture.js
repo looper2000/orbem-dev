@@ -16,6 +16,13 @@ function initScene(containerSelector, modelUrl, referenceSelector, positionSelec
     console.warn(`Container ${containerSelector} not found!`);
     return;
   }
+  
+  const isMobile = window.innerWidth < 768;
+  
+  // Dirty flag for conditional rendering
+  let needsRender = true;
+  let loadedModel = null;
+  
   const scene = new THREE.Scene();
   const focalLength = 105;
   const sensorHeight = 24;
@@ -27,12 +34,20 @@ function initScene(containerSelector, modelUrl, referenceSelector, positionSelec
     1000
   );
   camera.position.set(0, 0, 40);
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  
+  // Optimized renderer configuration
+  const dpr = window.devicePixelRatio;
+  const renderer = new THREE.WebGLRenderer({ 
+    antialias: !isMobile,  // Disable AA on mobile
+    alpha: true,
+    powerPreference: "high-performance"
+  });
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(dpr > 2 ? 2 : dpr > 1.5 ? 1.5 : 1);
   renderer.domElement.style.width = '100%';
   renderer.domElement.style.height = '100%';
   renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = false;
   container.appendChild(renderer.domElement);
   
   const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 2);
@@ -55,7 +70,23 @@ function initScene(containerSelector, modelUrl, referenceSelector, positionSelec
   
   loader.load(modelUrl, function (gltf) {
     const model = gltf.scene;
+    loadedModel = model;
+    
+    // Model loading optimizations
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = false;
+        child.receiveShadow = false;
+        child.frustumCulled = true;
+        if (child.geometry) {
+          child.geometry.computeBoundingSphere();
+        }
+      }
+    });
+    
     scene.add(model);
+    needsRender = true;
+    
     const referenceElement = document.querySelector(referenceSelector);
     const positionElement = document.querySelector(positionSelector);
     const box = new THREE.Box3().setFromObject(model);
@@ -97,7 +128,9 @@ function initScene(containerSelector, modelUrl, referenceSelector, positionSelec
           trigger: ".hero_modal-top",
           start: scrollMap.scrollTriggers[2].start,
           end: scrollMap.scrollTriggers[3].end,
-          scrub: true
+          scrub: 2,
+          fastScrollEnd: true,
+          onUpdate: () => { needsRender = true; }
         }
       });
     }
@@ -105,18 +138,46 @@ function initScene(containerSelector, modelUrl, referenceSelector, positionSelec
     console.error(`Error loading model in ${containerSelector}:`, error);
   });
   
-  const onResize = () => {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
-  };
-  window.addEventListener('resize', onResize);
+  // Throttled resize handler
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      needsRender = true;
+    }, 250);
+  });
+  
+  // Conditional rendering animation loop
   function animate() {
     requestAnimationFrame(animate);
     controls.update();
-    renderer.render(scene, camera);
+    if (needsRender) {
+      renderer.render(scene, camera);
+      needsRender = false;
+    }
   }
   animate();
+  
+  // Memory cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (loadedModel) {
+      loadedModel.traverse((child) => {
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(m => m.dispose());
+          } else {
+            child.material.dispose();
+          }
+        }
+      });
+    }
+    renderer.dispose();
+    dracoLoader.dispose();
+  });
 }
 
 // Initialize the specific scene

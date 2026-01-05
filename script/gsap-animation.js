@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-header",
         start: "top top",
         end: "bottom top",
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     });
   
@@ -42,7 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[0].start,
         end: scrollMap.scrollTriggers[0].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     });
   
@@ -56,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[1].start,
         end: scrollMap.scrollTriggers[1].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     });
   
@@ -70,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[2].start,
         end: scrollMap.scrollTriggers[2].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     });
   
@@ -84,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[3].start,
         end: scrollMap.scrollTriggers[3].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     });
   
@@ -101,7 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
           trigger: ".hero_modal-top",
           start: scrollMap.scrollTriggers[3].start,
           end: scrollMap.scrollTriggers[3].end,
-          scrub: true,
+          scrub: 2,
+          fastScrollEnd: true,
           onUpdate(self) {
             const capped = Math.min(self.progress * 1.3333, 1);
             if (self.animation) self.animation.progress(capped);
@@ -116,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[4].start,
         end: scrollMap.scrollTriggers[4].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     })
     .from("[image-label] .hero_model-svg", {
@@ -136,7 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[5].start,
         end: scrollMap.scrollTriggers[5].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     })
     .to("[image-label]", {
@@ -152,7 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[6].start,
         end: scrollMap.scrollTriggers[6].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     })
     .to(".hero_modal-image.is-3", {
@@ -167,7 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[7].start,
         end: scrollMap.scrollTriggers[7].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     })
     .fromTo(".hero_modal-image.is-4-wrapper", {
@@ -193,7 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[8].start,
         end: scrollMap.scrollTriggers[8].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     });
   
@@ -210,7 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
           trigger: ".hero_modal-top",
           start: scrollMap.scrollTriggers[8].start,
           end: scrollMap.scrollTriggers[8].end,
-          scrub: true,
+          scrub: 2,
+          fastScrollEnd: true,
           onUpdate(self) {
             const capped = Math.min(self.progress * 1.3333, 1);
             if (self.animation) self.animation.progress(capped);
@@ -225,7 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[9].start,
         end: scrollMap.scrollTriggers[9].end,
-        scrub: true
+        scrub: 2,
+        fastScrollEnd: true
       }
     })
     .from("[particle-label] .hero_model-svg", {
@@ -238,14 +251,15 @@ document.addEventListener('DOMContentLoaded', () => {
       duration: 0.1,
       ease: "power2.out"
     });
-  
+
     // Particle Label Exit
     gsap.timeline({
       scrollTrigger: {
         trigger: ".hero_modal-top",
         start: scrollMap.scrollTriggers[10].start,
         end: scrollMap.scrollTriggers[10].end,
-        scrub: true,
+        scrub: 2,
+        fastScrollEnd: true,
         onLeave: () => {
           gsap.set(".moude_interaction-layer", { display: "none" });
         },

@@ -503,14 +503,19 @@
     });
     observer.observe(svg, { attributes: true, childList: true, subtree: true });
   
+    // Throttled resize handler
+    let resizeTimeout;
     window.addEventListener('resize', () => {
-      if (isModelLoaded) {
-        cachedParticles = null;
-        applyCanvasSize();
-        if (particles.length > 0) {
-          prepareDispersionParams();
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (isModelLoaded) {
+          cachedParticles = null;
+          applyCanvasSize();
+          if (particles.length > 0) {
+            prepareDispersionParams();
+          }
         }
-      }
+      }, 250);
     });
   
     function startModel() {

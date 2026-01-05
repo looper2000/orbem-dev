@@ -1,0 +1,11 @@
+{
+  "name": "orbem-dev",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "browser-sync start --server --files \"**/*.js\" \"**/*.css\" \"**/*.html\""
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.2"
+  }
+}
+
